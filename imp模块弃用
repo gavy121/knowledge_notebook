@@ -1,0 +1,59 @@
+这是一个“弃用警告”，即模块imp已被弃用，根据错误提示上说使用importlib代替。
+
+```python
+ DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+弃用警告：imp模块已被弃用，使用importlib代替；有关其他用途，请参阅模块的文档
+
+  from imp import reload      
+
+```
+
+修改为：
+
+```python
+from importlib import reload
+
+```
+
+即可。
+
+定位到imp模块内，查看模块注释，可以看到更多信息。
+
+```python
+"""This module provides the components needed to build your own __import__
+function.  Undocumented functions are obsolete.
+
+In most cases it is preferred you consider using the importlib module's
+functionality over this module.
+
+这个模块提供了构建您自己的_import__函数所需的组件。未文档化的函数已经过时。
+在大多数情况下，您最好考虑在此模块之上使用importlib模块的功能。
+"""
+
+from _imp import (lock_held, acquire_lock, release_lock,
+                  get_frozen_object, is_frozen_package,
+                  init_frozen, is_builtin, is_frozen,
+                  _fix_co_filename)
+try:
+    from _imp import create_dynamic
+except ImportError:
+    
+    create_dynamic = None
+
+from importlib._bootstrap import _ERR_MSG, _exec, _load, _builtin_from_name
+from importlib._bootstrap_external import SourcelessFileLoader
+
+from importlib import machinery
+from importlib import util
+import importlib
+import os
+import sys
+import tokenize
+import types
+import warnings
+
+warnings.warn("the imp module is deprecated in favour of importlib; "
+              "see the module's documentation for alternative uses",
+              DeprecationWarning, stacklevel=2)
+
+```
